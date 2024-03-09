@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
+use Psr\Log\LoggerInterface;
 
 #[AsController]
 class CookieConsentController
@@ -69,6 +70,8 @@ class CookieConsentController
      */
     private $formAction;
 
+    private LoggerInterface $logger;
+
     public function __construct(
         Environment $twigEnvironment,
         FormFactoryInterface $formFactory,
@@ -77,6 +80,7 @@ class CookieConsentController
         string $cookieConsentTheme,
         string $cookieConsentPosition,
         TranslatorInterface $translator,
+        LoggerInterface $logger,
         bool $cookieConsentSimplified = false,
         string $formAction = null
     ) {
@@ -89,6 +93,7 @@ class CookieConsentController
         $this->translator              = $translator;
         $this->cookieConsentSimplified = $cookieConsentSimplified;
         $this->formAction              = $formAction;
+        $this->logger                  = $logger;
     }
 
     /**
@@ -121,7 +126,11 @@ class CookieConsentController
     #[Route('/cookie_consent_alt', name: 'ch_cookie_consent.show_if_cookie_consent_not_set')]
     public function showIfCookieConsentNotSet(Request $request): Response
     {
+        $this->logger->info('Setting consent cookie.');
         if ($this->cookieChecker->isCookieConsentSavedByUser() === false) {
+            $this->logger->info('Consent cookie is present.');
+        } else {
+            $this->logger->info('Consent cookie is not present.');
             return $this->show($request);
         }
 
