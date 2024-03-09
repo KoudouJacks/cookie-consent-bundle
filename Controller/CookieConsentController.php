@@ -133,7 +133,7 @@ class CookieConsentController
             return $this->show($request);
         }
 
-        $this->logger->info('Consent cookie is not present.');
+        $this->logger->info('Consent cookie is present.');
 
         return new Response();
     }
