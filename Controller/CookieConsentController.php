@@ -128,11 +128,12 @@ class CookieConsentController
     {
         $this->logger->info('Setting consent cookie.');
         if ($this->cookieChecker->isCookieConsentSavedByUser() === false) {
-            $this->logger->info('Consent cookie is present.');
-        } else {
             $this->logger->info('Consent cookie is not present.');
+
             return $this->show($request);
         }
+
+        $this->logger->info('Consent cookie is not present.');
 
         return new Response();
     }
