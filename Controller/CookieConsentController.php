@@ -126,15 +126,11 @@ class CookieConsentController
     #[Route('/cookie_consent_alt', name: 'ch_cookie_consent.show_if_cookie_consent_not_set')]
     public function showIfCookieConsentNotSet(Request $request): Response
     {
-        $this->logger->info('Setting consent cookie.');
         if ($this->cookieChecker->isCookieConsentSavedByUser() === false) {
-            $this->logger->info('Consent cookie is not present.');
 
             return $this->show($request);
         }
-
-        $this->logger->info('Consent cookie is present.');
-
+        
         return new Response();
     }
 

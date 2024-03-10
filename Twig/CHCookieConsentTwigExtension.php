@@ -16,6 +16,13 @@ use Twig\TwigFunction;
 
 class CHCookieConsentTwigExtension extends AbstractExtension
 {
+    private CookieChecker $cookieChecker;
+
+    public function __construct(CookieChecker $cookieChecker)
+    {
+        $this->cookieChecker = $cookieChecker;
+    }
+
     /**
      * Register all custom twig functions.
      *
@@ -27,12 +34,10 @@ class CHCookieConsentTwigExtension extends AbstractExtension
             new TwigFunction(
                 'chcookieconsent_isCookieConsentSavedByUser',
                 [$this, 'isCookieConsentSavedByUser'],
-                ['needs_context' => true]
             ),
             new TwigFunction(
                 'chcookieconsent_isCategoryAllowedByUser',
                 [$this, 'isCategoryAllowedByUser'],
-                ['needs_context' => true]
             ),
         ];
     }
@@ -40,28 +45,16 @@ class CHCookieConsentTwigExtension extends AbstractExtension
     /**
      * Checks if user has sent cookie consent form.
      */
-    public function isCookieConsentSavedByUser(array $context): bool
+    public function isCookieConsentSavedByUser(): bool
     {
-        $cookieChecker = $this->getCookieChecker($context['app']->getRequest());
-
         return $cookieChecker->isCookieConsentSavedByUser();
     }
 
     /**
      * Checks if user has given permission for cookie category.
      */
-    public function isCategoryAllowedByUser(array $context, string $category): bool
+    public function isCategoryAllowedByUser(string $category): bool
     {
-        $cookieChecker = $this->getCookieChecker($context['app']->getRequest());
-
         return $cookieChecker->isCategoryAllowedByUser($category);
-    }
-
-    /**
-     * Get instance of CookieChecker.
-     */
-    private function getCookieChecker(Request $request): CookieChecker
-    {
-        return new CookieChecker($request);
     }
 }
