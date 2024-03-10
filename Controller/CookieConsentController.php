@@ -127,10 +127,9 @@ class CookieConsentController
     public function showIfCookieConsentNotSet(Request $request): Response
     {
         if ($this->cookieChecker->isCookieConsentSavedByUser() === false) {
-
             return $this->show($request);
         }
-        
+
         return new Response();
     }
 
