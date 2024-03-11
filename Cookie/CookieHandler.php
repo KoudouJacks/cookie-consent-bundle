@@ -12,6 +12,7 @@ namespace ConnectHolland\CookieConsentBundle\Cookie;
 use ConnectHolland\CookieConsentBundle\Enum\CookieNameEnum;
 use DateInterval;
 use DateTime;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,10 +22,15 @@ class CookieHandler
      * @var bool
      */
     private $httpOnly;
+    private array $sessionOptions;
 
-    public function __construct(bool $httpOnly)
-    {
+    public function __construct(
+        bool $httpOnly,
+        #[Autowire('%session.storage.options%')]
+        array $sessionOptions
+    ) {
         $this->httpOnly = $httpOnly;
+        $this->sessionOptions = $sessionOptions;
     }
 
     /**
@@ -49,7 +55,7 @@ class CookieHandler
         $expirationDate->add(new DateInterval('P1Y'));
 
         $response->headers->setCookie(
-            new Cookie($name, $value, $expirationDate, '/', null, null, $this->httpOnly, true)
+            new Cookie($name, $value, $expirationDate, '/', $this->sessionOptions['cookie_domain'] ?? null, null, $this->httpOnly, true)
         );
     }
 }
