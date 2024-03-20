@@ -47,7 +47,7 @@ class CHCookieConsentTwigExtension extends AbstractExtension
      */
     public function isCookieConsentSavedByUser(): bool
     {
-        return $cookieChecker->isCookieConsentSavedByUser();
+        return $this->cookieChecker->isCookieConsentSavedByUser();
     }
 
     /**
@@ -55,6 +55,6 @@ class CHCookieConsentTwigExtension extends AbstractExtension
      */
     public function isCategoryAllowedByUser(string $category): bool
     {
-        return $cookieChecker->isCategoryAllowedByUser($category);
+        return $this->cookieChecker->isCategoryAllowedByUser($category);
     }
 }
